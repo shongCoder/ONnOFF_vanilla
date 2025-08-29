@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>ONnOFF</title>
+
+    <!-- Tailwind (개발/임시용 CDN) -->
+    <script src="https://cdn.tailwindcss.com/3.4.10"></script>
+    <script>
+        // JS로 동적으로 붙는 클래스는 safelist로 미리 생성
+        tailwind.config = {
+            safelist: [
+                'animate-fadeInUp','max-h-[300px]','opacity-100','max-h-0','opacity-0',
+                'text-[#5200E9]','font-bold','font-semibold','text-on_black',
+                'text-[#5200E9]','text-[#0E0F12]',
+                'border-[#E1E1E1]','border-[#003E81]',
+                'shadow-xl','shadow-[rgba(0,0,0,0.03)]',
+            ],
+            theme: {
+                screens: { sm:'375px', md:'768px', lg:'1024px', xl:'1120px' },
+                extend: {
+                    fontFamily: { pretendard:['Pretendard','sans-serif'], play:['"Play"','sans-serif'] },
+                    colors: {
+                        on_light_gray:"#F5F6FC", on_dark_gray:"#5E5E73", on_black:"#1E1E2D",
+                        on_green:"#3ED597", on_pink:"#F15C75", on_blue:"#4F2EEB",
+                        on_purple_100:"#E3DEF8", on_purple_200:"#E3DEF8",
+                        on_purple_300:"#8438E4", on_purple_400:"#5C2DBA",
+                    },
+                    keyframes: {
+                        fadeInUp: { '0%':{opacity:0,transform:'translateY(30px)'}, '100%':{opacity:1,transform:'translateY(0)'} }
+                    },
+                    animation: { fadeInUp:'fadeInUp 0.8s ease-out forwards' },
+                }
+            }
+        }
+    </script>
+
+    <!-- 폰트 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.8/dist/web/static/pretendard.css" />
+
+    <!-- 선택: 약간의 기본 스타일 -->
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: "Pretendard", sans-serif; }
+        .button_style{display:flex;align-items:center;justify-content:center;border:1px solid #5200E933;background:#fff;text-align:center;border-radius:50px}
+        .checked_button_style{background:#5200E9;color:#fff}
+        .card-wrappper div:hover {
+            border: 1px solid rgba(82, 0, 233, 0.2);
+            background-color: white;
+            box-shadow: 0px 16px 12px rgba(0, 0, 0, 0.04);
+            border-radius: 24px;
+        }
+        .card-wrappper div span {
+            color: #5200E9;
+        }
+    </style>
+</head>
+<body class="antialiased bg-white text-on_black">
+
+<!-- HEADER (fixed) -->
+<header id="siteHeader" class="w-full md:h-[5rem] h-[4.25rem] bg-white/80 backdrop-blur-lg flex justify-center fixed z-50">
+    <div class="xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 px-4 flex items-center justify-between relative">
+        <!-- 로고 -->
+        <div class="flex gap-3">
+            <img src="./img/logo.svg" alt="logo" />
+            <p class="text-sm font-extrabold leading-4">
+                스마트<br />무인편의점
+            </p>
+        </div>
+
+        <!-- 모바일 메뉴 아이콘 -->
+        <div id="menuToggle" class="xl:hidden lg:hidden ml-auto w-9 cursor-pointer">
+            <img src="./img/menu_ico.png" alt="Menu Icon" />
+        </div>
+
+        <!-- 네비게이션 메뉴 -->
+        <nav id="navMenu"
+             class="xl:flex lg:flex absolute lg:static xl:static top-[5rem] left-0 w-full lg:w-auto bg-white lg:bg-transparent transition-all duration-500 ease-in-out overflow-hidden max-h-0 opacity-0 lg:max-h-none lg:opacity-100">
+            <ul class="flex flex-col lg:flex-row gap-6 py-6 lg:py-0 items-center">
+                <li data-id="intro" class="font-semibold text-on_black"><button>온앤오프24 소개</button></li>
+                <li data-id="strategy" class="font-semibold text-on_black"><button>성공전략</button></li>
+                <li data-id="why" class="font-semibold text-on_black"><button>WHY 온앤오프24</button></li>
+                <li data-id="interior" class="font-semibold text-on_black"><button>인테리어</button></li>
+                <li data-id="procedure" class="font-semibold text-on_black"><button>창업비용·절차</button></li>
+                <li data-id="contact" class="font-semibold text-on_black"><button>창업문의</button></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="w-full pt-[4.375rem]">
+    <!-- Intro -->
+    <section id="intro" data-animate="fadeInUp">
+        <div class="w-full flex justify-center pt-[100px] bg-[url(/img/info/back.png)] bg-contain bg-no-repeat">
+            <div class="xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 px-4 text-center flex flex-col items-center justify-center">
+                <div class="font-bold md:leading-[72px] sm:leading-[52px] md:text-[60px] sm:text-[36px]">
+                    <p class="text-[#231B31]">대한민국 No.1</p>
+                    <p class="bg-gradient-to-r from-[#BD1DEE] to-[#5200E9] bg-clip-text text-transparent">스마트 무인 편의점</p>
+                </div>
+                <div class="md:text-[18px] sm:text-[13px] md:leading-[28px] sm:leading-[20px] text-[#536B7C] mt-5">
+                    <p class="md:block hidden">
+                        저비용으로 시작해 고효율로 운영하는 수익 극대화 성공 창업의 길, <br />
+                        검증된 무인창업 모델로 성공의 기회를 함께 만들 창업 파트너를 모십니다.
+                    </p>
+                    <p class="md:hidden block">
+                        저비용으로 시작해 고효율로 운영하는 수익 극대화 성공 창업의 길,
+                        검증된 무인창업 모델로 성공의 기회를 함께 만들 창업 파트너를 모십니다.
+                    </p>
+                </div>
+                <button class="w-[178px] h-[56px] mt-6 text-white rounded-[2rem] bg-[#5200E9]  shadow-[inset_4px_4px_14px_0_rgba(255,255,255,0.2)]">
+                    창업 문의하기
+                </button>
+                <div class="xl:w-[880px] w-full aspect-video rounded-[24px] border-[8px] border-[#D8C3F0] mt-[60px] overflow-hidden shadow-xl">
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/2lAe1cqCOXo?si=4crGpn2tUPCQUcy6"
+                            title="YouTube video player" frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section data-animate="fadeInUp">
+        <div class="w-full pt-[6.25rem] pb-[6.25rem] flex flex-col justify-center items-center" ref={sectionRef}>
+            <div class="xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 px-4">
+                <div class="text-center text-[#052236] mb-[3.125rem]">
+                    <h3 class="font-play font-bold text-[#5200E9] tracking-wider inline-block [transform:scaleX(1.1)] mb-3">ABOUT</h3>
+                    <h2 class="lg:text-[2.5rem] text-[2rem] font-light">무인편의점 "창업"</h2>
+                    <h1 class="lg:text-[2.5rem] text-[2rem] font-bold">온앤오프24와 함께라면 안심하셔도 됩니다</h1>
+                </div>
+                <div class="flex lg:flex-row flex-col gap-[1.875rem] justify-center w-full text-center">
+                    <div class="flex-1 p-8 border border-[#F1F1F1] bg-[rgba(0,62,129,0.04)] rounded-[20px] flex flex-col items-center justify-center">
+                        <h3 class="lg:text-[1.125rem] md:text-[1rem] text-[1.125rem] font-bold text-[#052236]">운영경력</h3>
+                        <p class="text-[2.75rem] font-extrabold bg-gradient-to-r from-[#BD1DEE] to-[#5200E9] bg-clip-text text-transparent my-2">{count1}<span class="text-[1.5rem]"> 년</span></p>
+                        <p class="text-[#536B7C] lg:text-[0.875rem] md:text-[13px] text-[0.875rem]">편의점 프렌차이즈</p>
+                    </div>
+                    <div class="flex-1 p-8 border border-[#F1F1F1] bg-[rgba(0,62,129,0.04)] rounded-[20px] flex flex-col items-center justify-center">
+                        <h3 class="lg:text-[1.125rem] md:text-[1rem] text-[1.125rem] font-bold text-[#052236]">
+                            무인편의점 운영경력
+                        </h3>
+                        <p class="text-[2.75rem] font-extrabold bg-gradient-to-r from-[#BD1DEE] to-[#5200E9] bg-clip-text text-transparent my-2">
+                            {count2}<span class="text-[1.5rem]"> 년 </span>
+                            {count3}<span class="text-[1.5rem]"> 월</span>
+                        </p>
+                        <p class="text-[#536B7C] lg:text-[0.875rem] md:text-[13px] text-[0.875rem]">
+                            무인편의점 업계 최초 시작일
+                        </p>
+                    </div>
+                    <div class="flex-1 p-8 border border-[#F1F1F1] bg-[rgba(0,62,129,0.04)] rounded-[20px] flex flex-col items-center justify-center">
+                        <h3 class="lg:text-[1.125rem] md:text-[1rem] text-[1.125rem] font-bold text-[#052236]">
+                            도난발생 보상 건 수
+                        </h3>
+                        <p class="text-[2.75rem] font-extrabold bg-gradient-to-r from-[#BD1DEE] to-[#5200E9] bg-clip-text text-transparent my-2">{count4}<span class="text-[1.5rem]"> 건</span></p>
+                        <p class="text-[#536B7C] lg:text-[0.875rem] md:text-[13px] text-[0.875rem]">현재까지</p>
+                    </div>
+                    <div class="flex-1 p-8 border border-[#F1F1F1] bg-[rgba(0,62,129,0.04)] rounded-[20px] flex flex-col items-center justify-center">
+                        <h3 class="lg:text-[1.125rem] md:text-[1rem] text-[1.125rem] font-bold text-[#052236]">전국 가맹점</h3>
+                        <p class="text-[2.75rem] font-extrabold bg-gradient-to-r from-[#BD1DEE] to-[#5200E9] bg-clip-text text-transparent my-2">{count5}<span class="text-[1.5rem]"> 여점포</span></p>
+                        <p class="text-[#536B7C] lg:text-[0.875rem] md:text-[13px] text-[0.875rem]">
+                            물류회원점 포함
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+    <section data-animate="fadeInUp">
+        <div class="w-full pt-[6.25rem] pb-[6.25rem] flex flex-col justify-center items-center">
+            <div class="text-center text-[#052236] mb-[3.125rem] xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 px-4">
+                <h3 class="font-play font-bold text-[#5200E9] tracking-wider inline-block [transform:scaleX(1.1)] mb-3">TYPE</h3>
+                <h2 class="lg:text-[2.5rem] text-[2rem] font-light">온앤오프24</h2>
+                <h1 class="lg:text-[2.5rem] text-[2rem] font-bold">무인편의점 유형별 창업</h1>
+                <p class="mt-5 text-[#919FA8] lg:text-[1.125rem] text-[0.875rem]">
+                    온앤오프24와 함께라면, 안심하고 창업하실 수 있습니다.
+                </p>
+            </div>
+
+            <div class="xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 px-4">
+                <!-- RFID 카드 -->
+                <div
+                        class="border rounded-[1.25rem] lg:px-6 md:px-4 px-4 lg:py-8 md:py-6 py-6 mb-4 border-[#003E81] border-opacity-[8%]">
+                    <div class="flex items-center justify-between cursor-pointer">
+        <span class="text-left lg:text-[1.5rem] md:text-[1.25rem] text-[1rem] font-bold text-[#0E0F12]">
+          RFID Type
+        </span>
+                        <img src="./img/info/plus.svg" class="lg:w-5 md:w-4 w-4 transition-transform duration-300 rotate-0" alt="" />
+                    </div>
+
+                    <div class="text-[#919FA8] mt-3 lg:text-[1rem] md:text-[0.875rem] text-[0.8125rem]">
+                        모든 상품에는 결제를 위한 RFID칩 스티커가 부착되어 있고, 고객이 상품을 계산대에 올리면 RFID칩이 자동으로 인식됩니다.
+                        <div style="max-height:0px; overflow:hidden; transition:max-height 1s ease;">
+                            <div class="flex-1 w-full flex items-center justify-center md:gap-6 gap-1 mt-3">
+                                <div class="flex-1 aspect-square border border-[#003E81] border-opacity-[8%] rounded-[1rem] bg-[url(/img/info/RFID/1.png)] bg-cover bg-clip-padding"></div>
+                                <div class="flex-1 aspect-square border border-[#003E81] border-opacity-[8%] rounded-[1rem] bg-[url(/img/info/RFID/2.png)] bg-cover bg-clip-padding"></div>
+                                <div class="flex-1 aspect-square border border-[#003E81] border-opacity-[8%] rounded-[1rem] bg-[url(/img/info/RFID/3.png)] bg-cover bg-clip-padding"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SELF 카드 -->
+                <div
+                        class="border rounded-[1.25rem] lg:px-6 md:px-4 px-4 lg:py-8 md:py-6 py-6 mb-4 border-[#003E81] border-opacity-5">
+                    <div class="flex items-center justify-between cursor-pointer">
+        <span class="text-left lg:text-[1.5rem] md:text-[1.25rem] text-[1rem] font-bold text-[#0E0F12]">
+          SELF Type
+        </span>
+                        <img src="./img/info/plus.svg" class="lg:w-5 md:w-4 w-4 transition-transform duration-300 rotate-0" alt="" />
+                    </div>
+
+                    <div class="text-[#919FA8] mt-3 lg:text-[1rem] md:text-[0.875rem] text-[0.8125rem]">
+                        고객이 셀프POS로 스캔 및 결제하는 스마트 편의점입니다.
+                        <div style="max-height:0px; overflow:hidden; transition:max-height 1s ease;">
+                            <div class="flex-1 w-full flex items-center justify-center md:gap-6 gap-1 mt-3">
+                                <div class="flex-1 aspect-square border border-[#003E81] border-opacity-[8%] rounded-[1rem] bg-[url(/img/info/self/1.png)] bg-cover bg-clip-padding"></div>
+                                <div class="flex-1 aspect-square border border-[#003E81] border-opacity-[8%] rounded-[1rem] bg-[url(/img/info/self/2.png)] bg-cover bg-clip-padding"></div>
+                                <div class="flex-1 aspect-square border border-[#003E81] border-opacity-[8%] rounded-[1rem] bg-[url(/img/info/self/3.png)] bg-cover bg-clip-padding"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HYBRID 카드 -->
+                <div
+                        class="border rounded-[1.25rem] lg:px-6 md:px-4 px-4 lg:py-8 md:py-6 py-6 mb-4 border-[#003E81] border-opacity-5">
+                    <div class="flex items-center justify-between cursor-pointer">
+        <span class="text-left lg:text-[1.5rem] md:text-[1.25rem] text-[1rem] font-bold text-[#0E0F12]">
+          Hybrid Type
+        </span>
+                        <img src="./img/info/plus.svg" class="lg:w-5 md:w-4 w-4 transition-transform duration-300 rotate-0" alt="" />
+                    </div>
+
+                    <div class="text-[#919FA8] mt-3 lg:text-[1rem] md:text-[0.875rem] text-[0.8125rem]">
+                        유인 운영에 RFID/SELF 무인을 결합한 최적화 모델입니다.
+                        <div style="max-height:0px; overflow:hidden; transition:max-height 1s ease;">
+                            <div class="flex-1 w-full flex items-center justify-center md:gap-6 gap-1 mt-3">
+                                <div class="flex-1 aspect-square border border-[#003E81] border-opacity-[8%] rounded-[1rem] bg-[url(/img/info/hybrid/1.png)] bg-cover bg-clip-padding"></div>
+                                <div class="flex-1 aspect-square border border-[#003E81] border-opacity-[8%] rounded-[1rem] bg-[url(/img/info/hybrid/2.png)] bg-cover bg-clip-padding"></div>
+                                <div class="flex-1 aspect-square border border-[#003E81] border-opacity-[8%] rounded-[1rem] bg-[url(/img/info/hybrid/3.png)] bg-cover bg-clip-padding"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- // Intro -->
+
+    </section>
+
+    <!-- strategy -->
+    <section id="strategy">
+        <div class="w-full pt-[6.25rem] pb-[6.25rem] bg-[#003E8105] flex flex-col justify-center items-center overflow-x-hidden overflow-y-visible">
+            <div class="text-center text-[#052236] mb-5 xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 px-4">
+                <h3 class="font-play font-bold text-[#5200E9] tracking-wider inline-block [transform:scaleX(1.1)] mb-3">STRATEGY</h3>
+                <h2 class="lg:text-[2.5rem] text-[2rem] font-light">온앤오프24</h2>
+                <h1 class="lg:text-[2.5rem] text-[2rem] font-bold">차별화된 성공전략</h1>
+            </div>
+            <div id="strategyMenu" class="flex md:gap-3 gap-2 xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 px-4 justify-center items-center mb-[3.125rem] font-semibold text-[#919FA8]">
+                <button class="button_style checked_button_style whitespace-nowrap lg:text-[1rem] md:text-[0.875rem] text-[0.8125rem] md:px-4 md:py-2 px-3 py-[6px]" data-type="special">특수상권점포</button>
+                <button class="button_style whitespace-nowrap lg:text-[1rem] md:text-[0.875rem] text-[0.8125rem] md:px-4 md:py-2 px-3 py-[6px]" data-type="conversion">전환점포</button>
+                <button class="button_style whitespace-nowrap lg:text-[1rem] md:text-[0.875rem] text-[0.8125rem] md:px-4 md:py-2 px-3 py-[6px]" data-type="twojobs">투잡점포</button>
+                <button class="button_style whitespace-nowrap lg:text-[1rem] md:text-[0.875rem] text-[0.8125rem] md:px-4 md:py-2 px-3 py-[6px]" data-type="vacancy">신축/공실점포</button>
+            </div>
+            <div id="strategyTrackWrap" class="overflow-hidden w-full">
+                <div id="strategyTrack" class="flex will-change-transform" style="width:max-content; white-space:nowrap; transform:translateX(0px)"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why -->
+    <section id="why" data-animate="fadeInUp">
+        <div class="w-full pt-[6.25rem] pb-[6.25rem] flex flex-col justify-center items-center xl:px-0 lg:px-8 md:px-8 px-4" ref={sectionRef}>
+            <div class="text-center text-[#052236] mb-[3.125rem]">
+                <h3 class="font-play font-bold text-[#5200E9] tracking-wider inline-block [transform:scaleX(1.1)] mb-3">WHY</h3>
+                <h1 class="lg:text-[2.5rem] text-[2rem] font-bold">온앤오프24?</h1>
+                <p class="mt-5 text-[#919FA8] lg:text-[1.125rem] text-[0.875rem]">온앤오프24와 함께라면<br />안심하셔도 됩니다</p>
+            </div>
+
+            <div class="flex lg:flex-row flex-col lg:gap-6 gap-5 w-full justify-center items-center">
+                <div class="w-full lg:w-[23.5rem] h-[23.5rem] bg-[#5200E9] transition-transform duration-200 hover:-translate-y-2 rounded-[3.25rem] py-[2.625rem] flex flex-col justify-center items-center gap-3 shrink-0 shadow-lg [box-shadow:var(--tw-shadow),inset_4px_4px_14px_rgba(255,255,255,0.2)]">
+                    <a href="#why2" class="text-center">
+                        <div class="bg-[rgba(0,0,0,0.16)] px-4 py-2 text-white text-[0.875rem] font-bold inline-block rounded-[1.25rem]">REASON 01</div>
+                        <p class="text-white font-semibold text-[1.5rem] text-center">안정적인<br />무인시스템 지원</p>
+                        <img src="./img/why/reason1.png" class="w-[10rem] h-[10rem]" alt="" />
+                    </a>
+                </div>
+
+                <div class="w-full lg:w-[23.5rem] h-[23.5rem] bg-[#191A54] transition-transform duration-200 hover:-translate-y-2 rounded-[3.25rem] py-[2.625rem] flex flex-col justify-center items-center gap-3 shrink-0 shadow-lg [box-shadow:var(--tw-shadow),inset_4px_4px_14px_rgba(255,255,255,0.2)]">
+                    <a href="#why3" class="text-center">
+                        <div class="bg-[rgba(0,0,0,0.16)] px-4 py-2 text-white text-[0.875rem] font-bold inline-block rounded-[1.25rem]">REASON 02</div>
+                        <p class="text-white font-semibold text-[1.5rem] text-center">경쟁력있는<br />상품 공급</p>
+                        <img src="./img/why/reason2.png" class="w-[10rem] h-[10rem]" alt="" />
+                    </a>
+                </div>
+                <div class="w-full lg:w-[23.5rem] h-[23.5rem] bg-[#052236] transition-transform duration-200 hover:-translate-y-2 rounded-[3.25rem] py-[2.625rem] flex flex-col justify-center items-center gap-3 shrink-0 shadow-lg [box-shadow:var(--tw-shadow),inset_4px_4px_14px_rgba(255,255,255,0.2)]">
+                    <a href="#why4" class="text-center">
+                        <div class="bg-[rgba(0,0,0,0.16)] px-4 py-2 text-white text-[0.875rem] font-bold inline-block rounded-[1.25rem]">REASON 03</div>
+                        <p class="text-white font-semibold text-[1.5rem] text-center">수익극대화를 위한<br />온앤오프 제안</p>
+                        <img src="./img/why/reason3.png" class="w-[10rem] h-[10rem]" alt="" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section data-animate="fadeInUp">
+        <div id="why2" class="w-full flex items-center justify-center bg-[#003E8105]">
+            <div class="xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 px-4 py-[6.25rem]">
+                <div class="w-full flex md:flex-row flex-col md:justify-between justify-center md:items-end items-center mb-[3.75rem]">
+                    <div class="md:text-left text-center">
+                        <h3 class="font-play font-bold text-[#5200E9] tracking-wider inline-block [transform:scaleX(1.1)] md:ml-2 ml-0 mb-3">
+                            REASON 01
+                        </h3>
+                        <h1 class="lg:text-[2.5rem] text-[2rem] text-[#052236] font-bold md:mb-0 mb-3">
+                            안정적인<br />무인시스템 지원
+                        </h1>
+                    </div>
+                    <div class="md:text-right text-center g:text-[1.125rem] text-[0.875rem] text-[#898D99]">
+                        <p class="md:block hidden">
+                            RFID 도난방지와 100% 손실 보상, 모바일 스마트 매장 관리,<br />
+                            상품 권장 발주, 술/담배 성인인증 키오스크, 긴급 알림 서비스 등<br />
+                            온앤오프24는 무인 운영에 꼭 필요한 핵심 기능을 모두 갖춘 스마트 무인 편의점입니다.
+                        </p>
+                        <p class="md:hidden block">
+                            RFID 도난방지와 100% 손실 보상, 모바일 스마트 매장 관리,
+                            상품 권장 발주, 술/담배 성인인증 키오스크, 긴급 알림 서비스 등
+                            온앤오프24는 무인 운영에 꼭 필요한 핵심 기능을 모두 갖춘 스마트 무인 편의점입니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="w-full flex xl:flex-row flex-col gap-5 text-[#052236]">
+                    <!-- 좌측: 클릭 카드들 -->
+                    <div id="why2List" class="flex-1 flex flex-col gap-5 xl:text-[22px] text-[20px] card-wrappper">
+                        <div class="w-full p-5 border border-transparent font-bold cursor-pointer" data-num="1" tabindex="0" role="button">
+                            <span>도난 방지</span> POS시스템
+                        </div>
+                        <div class="w-full p-5 border border-transparent font-bold cursor-pointer" data-num="2" tabindex="0" role="button">
+                            도난 발생시 <span>100% 보상 시스템</span>
+                        </div>
+                        <div class="w-full p-5 border border-transparent font-bold cursor-pointer" data-num="3" tabindex="0" role="button">
+                            언제, 어디서든 확인가능한 <span>점포통합관리 시스템</span>
+                        </div>
+                        <div class="w-full p-5 border border-transparent font-bold cursor-pointer" data-num="4" tabindex="0" role="button">
+                            점포 상태를 확인하고 알려주는 <span>알림 시스템</span>
+                        </div>
+                        <div class="w-full p-5 border border-transparent font-bold cursor-pointer" data-num="5" tabindex="0" role="button">
+                            고객과 점주간에 워키토키방식의 <span>상호 소통 시스템</span>
+                        </div>
+                    </div>
+
+                    <!-- 우측: 미리보기 이미지 -->
+                    <div class="flex-1">
+                        <div
+                                id="why2Image"
+                                class="w-full border border-[rgba(0, 62, 129, 0.08)] h-[455px] rounded-[20px] bg-cover bg-center"
+                                style="background-image:url('./img/why/detail1/img1.png')"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- // why -->
+
+    <section id="interior" class="min-h-[80vh] scroll-mt-[4.375rem]" data-animate="fadeInUp">
+        <div class="grid place-items-center h-full">
+            <h2 class="text-2xl md:text-4xl font-bold">인테리어</h2>
+        </div>
+    </section>
+
+    <section id="procedure" class="min-h-[80vh] scroll-mt-[4.375rem]" data-animate="fadeInUp">
+        <div class="grid place-items-center h-full">
+            <h2 class="text-2xl md:text-4xl font-bold">창업비용·절차</h2>
+        </div>
+    </section>
+
+    <section id="contact" class="min-h-[80vh] scroll-mt-[4.375rem]" data-animate="fadeInUp">
+        <div class="grid place-items-center h-full">
+            <h2 class="text-2xl md:text-4xl font-bold">창업문의</h2>
+        </div>
+    </section>
+</main>
+
+<!-- 모든 JS 인라인: file://에서도 동작 -->
+<script>
+    (function(){
+        const header = document.getElementById('siteHeader');
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        let isOpen = false;
+
+        // 1) 모바일 메뉴 토글
+        function applyMenuState(open){
+            isOpen = open;
+            navMenu.classList.toggle("max-h-[300px]", open);
+            navMenu.classList.toggle("opacity-100", open);
+            navMenu.classList.toggle("max-h-0", !open);
+            navMenu.classList.toggle("opacity-0", !open);
+        }
+        menuToggle?.addEventListener('click', ()=>applyMenuState(!isOpen));
+
+        // 2) 메뉴 클릭 → 부드러운 스크롤 + 메뉴 닫기
+        document.addEventListener('click', (e)=>{
+            const li = e.target.closest('#navMenu li');
+            if(!li) return;
+            const id = li.dataset.id;
+            const el = document.getElementById(id);
+            if(!el) return;
+            e.preventDefault();
+            el.scrollIntoView({ behavior:'smooth', block:'start' });
+            applyMenuState(false);
+        });
+
+        // 3) 섹션 활성(nav active) — IntersectionObserver
+        const sections = Array.from(document.querySelectorAll('section[id]'));
+        const navItems = Array.from(document.querySelectorAll('#navMenu li'));
+
+        function headerOffset(){ return header?.offsetHeight || 70; }
+
+        const activeObserver = new IntersectionObserver((entries)=>{
+            const visible = entries.filter(e=>e.isIntersecting);
+            if(!visible.length) return;
+            visible.sort((a,b)=>a.boundingClientRect.top - b.boundingClientRect.top);
+            const currentId = visible[0].target.id;
+
+            navItems.forEach(li=>{
+                const on = li.dataset.id === currentId;
+                li.classList.toggle('text-[#5200E9]', on);
+                li.classList.toggle('font-bold', on);
+                li.classList.toggle('text-on_black', !on);
+                li.classList.toggle('font-semibold', !on);
+            });
+
+            if(location.hash !== `#${currentId}`){
+                // file://에서도 동작 (히스토리 API 가능)
+                history.replaceState(null,'',`#${currentId}`);
+            }
+        }, { rootMargin: `-${headerOffset()}px 0px 0px 0px`, threshold: 0.1 });
+
+        sections.forEach(s=>activeObserver.observe(s));
+        window.addEventListener('resize', ()=>{
+            // rootMargin 갱신을 위해 재설정
+            activeObserver.disconnect();
+            sections.forEach(s=>activeObserver.observe(s));
+        });
+
+        // 4) 섹션 입장 애니메이션 재트리거
+        const animMap = new WeakMap();
+        const animObserver = new IntersectionObserver((entries)=>{
+            entries.forEach(({target, isIntersecting})=>{
+                const was = animMap.get(target) || false;
+                if(isIntersecting && !was){
+                    const name = target.dataset.animate || 'fadeInUp';
+                    const cls  = `animate-${name}`;
+                    target.classList.remove(cls);
+                    void target.offsetWidth; // 강제 리플로우
+                    target.classList.add(cls);
+                    animMap.set(target, true);
+                } else if(!isIntersecting){
+                    animMap.set(target, false);
+                }
+            });
+        }, { threshold: 0.3, rootMargin: '0px 0px -120px 0px' });
+
+        document.querySelectorAll('[data-animate]').forEach(el=>animObserver.observe(el));
+    })();
+</script>
+<script src="./js/intro.js"></script>
+<script src="./js/strategy.js"></script>
+<script src="./js/why.js"></script>
+</body>
+</html>
