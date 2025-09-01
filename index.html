@@ -37,8 +37,6 @@
 
     <!-- 폰트 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.8/dist/web/static/pretendard.css" />
-
-    <!-- 선택: 약간의 기본 스타일 -->
     <style>
         html { scroll-behavior: smooth; }
         body { font-family: "Pretendard", sans-serif; }
@@ -53,9 +51,81 @@
         .card-wrappper div span {
             color: #5200E9;
         }
+        #procedureTrack > div.active-style {
+            border: 1px solid rgba(152, 132, 189, 0.2);
+            background: linear-gradient(135deg,#ffffff 0%,#ffffff 10%,#f8f5fe 100%);
+            transform: translateY(-40px);
+            box-shadow: 0 20px 20px rgba(82,0,233,0.04);
+        }
+        #procedureTrack > div:not(.active-style) {
+            border: 1px solid rgba(82, 0, 233, 0.08);
+            background: white;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
     </style>
 </head>
 <body class="antialiased bg-white text-on_black">
+
+<!-- 팝업 -->
+<div
+        id="privacyPopup"
+        class="fixed inset-0 z-[9999] bg-[rgba(0,0,0,0.5)] flex justify-center items-center hidden"
+        role="dialog"
+        aria-modal="true"
+>
+    <div class="bg-white py-6 pl-6 pr-5 rounded-[16px] xl:w-[800px] w-full max-w-[90%]">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="font-bold text-[20px] text-[#052236]">개인정보처리방침</h1>
+            <button onclick="closePrivacyPopup()">
+                <img src="./img/icon-x.svg" alt="닫기" />
+            </button>
+        </div>
+
+        <div class="flex flex-col gap-5 text-[0.875rem] text-[#536B7C] max-h-[400px] overflow-y-auto pr-2">
+            <p>
+                개인정보의 수집 및 이용목적<br />
+                입력하신 정보는 1:1 맞춤상담에 대한 확인을 위해서만 사용합니다.<br />
+                수집 항목, 이용 목적, 보유 및 이용기간은 다음과 같으며 기타 개인정보 취급사항은<br />
+                홈페이지 하단의 '개인정보 취급방침'을 참고하시기 바랍니다.
+            </p>
+            <p>
+                수집하는 개인정보 항목<br />
+                - 수집항목 : 이름, 연락처, 이메일
+            </p>
+            <p>
+                수집 및 이용 목적<br />
+                - 본인 식별과 1:1 맞춤상담 확인 및 답변을 위해 아래와 같은 개인정보를 수집
+            </p>
+            <p>
+                보유 및 이용기간<br />
+                - 개인정보 수집 및 이용 목적이 달성된 후에는 예외없이 정보를 파기합니다.
+            </p>
+        </div>
+
+        <div class="w-full flex justify-center mt-[44px]">
+            <button
+                    onclick="closePrivacyPopup()"
+                    class="w-[276px] h-[48px] text-white bg-[#5200E9] rounded-[9px] shadow-[inset_4px_4px_14px_0_rgba(255,255,255,0.2)]"
+            >
+                확 인
+            </button>
+        </div>
+    </div>
+</div>
 
 <!-- HEADER (fixed) -->
 <header id="siteHeader" class="w-full md:h-[5rem] h-[4.25rem] bg-white/80 backdrop-blur-lg flex justify-center fixed z-50">
@@ -87,6 +157,75 @@
         </nav>
     </div>
 </header>
+
+<!-- Contact Bottom -->
+<div class="w-full h-20 z-10 fixed bottom-0 flex justify-center items-center bg-[#FFFFFFF5] backdrop-blur-[20px]">
+    <div class="xl:w-[70rem] w-full xl:px-0 lg:px-8 flex justify-between gap-3">
+        <!-- 좌측 텍스트 -->
+        <div class="flex items-center after:content-[''] after:w-[1px] after:h-4 after:bg-[#E8E8E8] after:ml-2">
+            <span class="text-[#536B7C] font-bold mr-2">창업 문의</span>
+            <span class="text-[#5200E9] font-bold xl:text-[1.35rem] lg:text-[1.25rem]">080-860-0708</span>
+        </div>
+
+        <!-- 입력/버튼 영역 -->
+        <div class="flex xl:justify-end md:justify-between items-center">
+            <!-- 입력 필드 -->
+            <div class="flex gap-3">
+                <input
+                        name="name"
+                        type="text"
+                        placeholder="이름"
+                        class="h-[44px] rounded-lg pl-3 bg-[#003E810A] border border-[#003E810A] text-[#536B7C] placeholder-[#536B7C] text-[0.8125rem] xl:w-[176px] w-full"
+                />
+                <input
+                        name="tel"
+                        type="text"
+                        placeholder="연락처"
+                        class="h-[44px] rounded-lg pl-3 bg-[#003E810A] border border-[#003E810A] text-[#536B7C] placeholder-[#536B7C] text-[0.8125rem] xl:w-[176px] w-full"
+                />
+                <input
+                        name="area"
+                        type="text"
+                        placeholder="희망지역"
+                        class="h-[44px] rounded-lg pl-3 bg-[#003E810A] border border-[#003E810A] text-[#536B7C] placeholder-[#536B7C] text-[0.8125rem] xl:w-[176px] w-full"
+                />
+            </div>
+
+            <!-- 체크 + 팝업 -->
+            <div class="ml-3 flex items-center">
+                <label class="cursor-pointer flex items-center">
+                    <input type="checkbox" name="agree" class="peer hidden" />
+                    <div class="w-[20px] h-[20px] bg-[url(/img/contact/unchecked.svg)] bg-cover rounded-full peer-checked:bg-[url(/img/contact/checked.svg)]"></div>
+                    <span class="text-[0.8125rem] font-semibold text-[#052236] ml-1 mr-2">약관동의</span>
+                </label>
+                <!-- 팝업 열기 버튼 -->
+                <img
+                        class="cursor-pointer"
+                        src="./img/contact-bottom/arrow-right.svg"
+                        alt="open popup"
+                        onclick="openPrivacyPopup()"
+                />
+            </div>
+
+            <!-- 문의하기 버튼 -->
+            <button
+                    class="bg-[#5200E9] shadow-[inset_4px_4px_14px_0_rgba(255,255,255,0.2)] text-white font-extrabold py-3 px-10 whitespace-nowrap ml-3 rounded-[12px]"
+            >
+                문의하기
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Right -->
+<div class="fixed flex flex-col items-center z-10 top-[11.4375rem] lg:right-[5rem] md:right-8 right-4 md:gap-6 gap-3">
+    <a>
+        <img src="./img/contact/quick.svg" class="md:w-[52px] w-[40px] cusor-pointer" />
+    </a>
+    <a>
+        <img src="./img/contact/kakao.svg" class="md:w-[52px] w-[40px] cusor-pointer" />
+    </a>
+</div>
 
 <main class="w-full pt-[4.375rem]">
     <!-- Intro -->
@@ -252,7 +391,7 @@
     </section>
 
     <!-- strategy -->
-    <section id="strategy">
+    <section id="strategy" data-animate="fadeInUp">
         <div class="w-full pt-[6.25rem] pb-[6.25rem] bg-[#003E8105] flex flex-col justify-center items-center overflow-x-hidden overflow-y-visible">
             <div class="text-center text-[#052236] mb-5 xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 px-4">
                 <h3 class="font-play font-bold text-[#5200E9] tracking-wider inline-block [transform:scaleX(1.1)] mb-3">STRATEGY</h3>
@@ -523,7 +662,7 @@
 
     <section data-animate="fadeInUp">
         <!-- InteriorComponent01 -->
-        <div id="interior1" class="w-full flex flex-col items-center justify-center py-[6.25rem]">
+        <div id="interior" class="w-full flex flex-col items-center justify-center py-[6.25rem]">
             <!-- 상단 텍스트 -->
             <div class="xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 px-4">
                 <div class="w-full flex md:flex-row flex-col md:justify-between justify-center md:items-end items-center mb-[3.75rem]">
@@ -884,11 +1023,117 @@
         </div>
     </section>
 
-    <section id="contact" class="min-h-[80vh] scroll-mt-[4.375rem]" data-animate="fadeInUp">
-        <div class="grid place-items-center h-full">
-            <h2 class="text-2xl md:text-4xl font-bold">창업문의</h2>
+
+
+    <section data-animate="fadeInUp">
+        <div id="contact" class="w-full flex justify-center items-center py-[6.25rem]">
+            <div class="xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 px-4 flex lg:flex-row flex-col">
+                <!-- 좌측 정보 -->
+                <div class="flex-1 md:mr-[3.75rem] text-[#052236] flex flex-col justify-between">
+                    <div class="md:text-left text-center">
+                        <h3 class="font-play font-bold text-[#5200E9] tracking-wider inline-block [transform:scaleX(1.1)] ml-2 mb-3">
+                            CONTACT
+                        </h3>
+                        <h2 class="md:text-[2.5rem] text-[2rem] font-light">온앤오프24</h2>
+                        <h1 class="md:text-[2.5rem] text-[2rem] font-bold">창업 문의</h1>
+                        <p class="mt-5 text-[#919FA8] text-[1.125rem] md:block hidden">
+                            성공적인 창업을 위해 전문 상담 매니저가 빠르게 연락드려<br />
+                            고객님 상황에 꼭 맞는 창업 솔루션을 제안드립니다.
+                        </p>
+                        <p class="mt-5 text-[#919FA8] text-[0.875rem] md:hidden block">
+                            성공적인 창업을 위해 전문 상담 매니저가 빠르게 연락드려 고객님 상황에 꼭 맞는 창업 솔루션을 제안드립니다.
+                        </p>
+                    </div>
+                    <div class="bg-[rgba(0,62,129,0.04)] border border-[#F1F1F1] rounded-[1.25rem] w-full p-6 mt-8">
+                        <h4 class="text-[#052236] font-bold mb-3">창업 설명회</h4>
+                        <p class="text-[#536B7C] font-semibold mb-2 md:text-[1rem] text-[0.875rem]">
+                            서울특별시 송파구 충민로 10 가든파이브툴 9층 S07호 (문정동)
+                        </p>
+                        <p class="text-[#919FA8] text-xs">평일 8시 30분~17시 30분 (전화 예약 필수)</p>
+                    </div>
+                </div>
+
+                <!-- 우측 폼 -->
+                <div class="flex-1 border border-[#E1E1E1] rounded-[2rem] md:p-10 p-4">
+                    <div class="mb-4">
+                        <span class="text-[#536B7C] text-xs">성함 <b class="text-[#BD3C2B]">*</b></span>
+                        <input type="text" placeholder="성함을 입력해 주세요"
+                               class="mt-3 bg-[rgba(0,62,129,0.02)] rounded-lg w-full py-4 px-3 text-sm" />
+                    </div>
+                    <div class="mb-4">
+                        <span class="text-[#536B7C] text-xs">연락처 <b class="text-[#BD3C2B]">*</b></span>
+                        <input type="text" placeholder="“-” 없이 입력해 주세요"
+                               class="mt-3 bg-[rgba(0,62,129,0.02)] rounded-lg w-full py-4 px-3 text-sm" />
+                    </div>
+                    <div class="mb-4">
+                        <span class="text-[#536B7C] text-xs">창업 희망지역 <b class="text-[#BD3C2B]">*</b></span>
+                        <input type="text" placeholder="창업 희망지역을 입력해 주세요"
+                               class="mt-3 bg-[rgba(0,62,129,0.02)] rounded-lg w-full py-4 px-3 text-sm" />
+                    </div>
+                    <div class="mb-4">
+                        <span class="text-[#536B7C] text-xs">점포 유무 <b class="text-[#BD3C2B]">*</b></span>
+                        <div class="flex gap-10 mt-3">
+                            <label class="cursor-pointer flex items-center gap-3">
+                                <input type="radio" name="exist" value="Y" class="peer hidden" />
+                                <div class="w-[24px] h-[24px] bg-[url(/img/contact/unchecked.svg)] rounded-full peer-checked:bg-[url(/img/contact/checked.svg)]"></div>
+                                <span class="text-sm text-[#536B7C]">점포 보유</span>
+                            </label>
+                            <label class="cursor-pointer flex items-center gap-3">
+                                <input type="radio" name="exist" value="N" class="peer hidden" />
+                                <div class="w-[24px] h-[24px] bg-[url(/img/contact/unchecked.svg)] rounded-full peer-checked:bg-[url(/img/contact/checked.svg)]"></div>
+                                <span class="text-sm text-[#536B7C]">점포 없음</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-11">
+                        <span class="text-[#536B7C] text-xs">문의 내용</span>
+                        <textarea placeholder="궁금하신 내용이 있으시다면 편하게 입력해 주세요"
+                                  class="mt-3 rounded-lg w-full h-[92px] py-4 px-3 text-sm resize-none bg-[rgba(0,62,129,0.02)]"></textarea>
+                    </div>
+                    <div class="bg-[rgba(0,62,129,0.02)] rounded-xl p-3 mb-6">
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" name="agree" value="Y" class="peer hidden" />
+                            <div class="w-[24px] h-[24px] bg-[url(/img/contact/unchecked.svg)] rounded-full peer-checked:bg-[url(/img/contact/checked.svg)]"></div>
+                            <span class="text-sm text-[#052236]">
+            <b class="font-semibold underline" onclick="openPrivacyPopup()">개인정보처리방침</b>에 동의합니다.
+          </span>
+                        </label>
+                    </div>
+                    <button class="w-full py-4 text-white rounded-lg bg-[#5200E9]">문의하기</button>
+                </div>
+            </div>
         </div>
+
     </section>
+    <div class="bg-white w-full  md:mb-[200px] mb-[120px] border-t border-[#F1F1F1]">
+        <div class="w-full xl:px-0 lg:px-8 md:px-8 px-4 flex flex-col items-center justify-center">
+            <div>
+                <img src="./img/footer/logo.svg" alt="logo" class="h-[32px] mt-[40px] grayscale opacity-60" />
+            </div>
+            <div class="w-full mt-[24px] mb-[32px] text-[0.8125rem] text-[#919FA8] text-center flex-col justify-center">
+                <p>
+                    <span class="font-medium">상호 : </span><span>(주)한국아이지에이&nbsp;&nbsp;</span>
+                    <span class="font-medium">대표 : </span><span>황본식&nbsp;&nbsp;</span><br class="md:hidden block" />
+                    <span class="font-medium">주소 : </span><span>서울특별시 송파구 충민로 10 가든파이브툴 9층 S07호 (문정동)&nbsp;&nbsp;</span>
+                </p>
+                <p>
+                    <span class="font-medium">사업자 등록번호 : </span><span>220-81-86969&nbsp;&nbsp;</span>
+                    <span class="font-medium">문의 전화 : </span><span>02-3453-0708&nbsp;&nbsp;</span><br class="md:hidden block" />
+                    <span class="font-medium">FAX : </span><span>02-3453-0715&nbsp;&nbsp;</span>
+                    <span class="font-medium md:hidden inline">E-mail : </span><span class="md:hidden inline">igapl@igakorea.com&nbsp;&nbsp;</span>
+                </p>
+                <p>
+                    <span class="font-medium md:inline hidden">E-mail : </span><span class="md:inline hidden">igapl@igakorea.com&nbsp;&nbsp;</span>
+                </p>
+            </div>
+            <div class="xl:w-[70rem] w-full xl:px-0 lg:px-8 md:px-8 sm:px-4 text-[0.8125rem] text-[#919FA8] text-center flex-col justify-center pt-3 border-t border-[#F1F1F1]">
+                <p>
+                    Copyright ⓒ <span class="font-medium">IGAKOREA</span> All rights reserved.
+                </p>
+            </div>
+        </div>
+
+    </div>
 </main>
 
 <!-- 모든 JS 인라인: file://에서도 동작 -->
@@ -956,23 +1201,27 @@
 
         // 4) 섹션 입장 애니메이션 재트리거
         const animMap = new WeakMap();
-        const animObserver = new IntersectionObserver((entries)=>{
-            entries.forEach(({target, isIntersecting})=>{
-                const was = animMap.get(target) || false;
-                if(isIntersecting && !was){
-                    const name = target.dataset.animate || 'fadeInUp';
-                    const cls  = `animate-${name}`;
-                    target.classList.remove(cls);
-                    void target.offsetWidth; // 강제 리플로우
-                    target.classList.add(cls);
-                    animMap.set(target, true);
-                } else if(!isIntersecting){
-                    animMap.set(target, false);
+        const animObserver = new IntersectionObserver((entries) => {
+            entries.forEach(({ target, isIntersecting }) => {
+                if (isIntersecting) {
+                    const name = target.dataset.animate || "fadeInUp";
+                    const cls = `animate-${name}`;
+
+                    // 처음 진입 시 한 번만 실행
+                    if (!target.classList.contains(cls)) {
+                        target.classList.add(cls);
+                    }
+                    // ✅ 관찰 중지 → 다시 안 사라지게
+                    animObserver.unobserve(target);
                 }
             });
-        }, { threshold: 0.3, rootMargin: '0px 0px -120px 0px' });
+        }, { threshold: 0.2, rootMargin: "0px 0px -120px 0px" });
 
-        document.querySelectorAll('[data-animate]').forEach(el=>animObserver.observe(el));
+// 대상 등록 시 초기 상태 숨기기
+        document.querySelectorAll("[data-animate]").forEach((el) => {
+            el.classList.add("opacity-0", "translate-y-[30px]");
+            animObserver.observe(el);
+        });
     })();
 </script>
 <script src="./js/intro.js"></script>
@@ -983,6 +1232,7 @@
 <script src="https://cdn.jsdelivr.net/npm/embla-carousel/embla-carousel.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"></script>
 <!-- 초기화 스크립트 -->
-<script src="./js/procedure-embla.js" defer></script>
+<script src="./js/procedure.js"></script>
+<script src="./js/contact.js"></script>
 </body>
 </html>
